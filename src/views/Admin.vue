@@ -5,17 +5,17 @@
         <div class="col-lg-12 grid-margin stretch-card">
           <div class="card">
             <div class="card-body">
-              <p class="card-title float-left"><b>Data Pelanggaran</b></p>
+              <p class="card-title float-left"><b>Data Admin</b></p>
               <p class="card-description float-right">
-                <b-button variant="success" v-b-modal.modalPelanggaran v-on:click="Add"><i class="mdi mdi-plus btn-icon-prepend"></i> Tambah</b-button>
+                <b-button variant="success" v-b-modal.modalTatib v-on:click="Add"><i class="mdi mdi-plus btn-icon-prepend"></i> Tambah</b-button>
               </p>
               <div class="table-responsive">
-                <b-table striped hover :items="pelanggaran" :fields="fields">
-                  <template v-slot:cell(role)="data">
+                <b-table striped hover :items="user" :fields="fields">
+                  <!-- <template v-slot:cell(role)="data">
                     <b-badge variant="warning">{{ data.item.role }}</b-badge>
-                  </template>
+                  </template> -->
                   <template v-slot:cell(Aksi)="data">
-                    <b-button size="sm" variant="info" v-on:click="Edit(data.item)" v-b-modal.modalPelanggaran><i class="mdi mdi-pencil btn-icon-prepend"></i> Ubah</b-button>&nbsp;
+                    <b-button size="sm" variant="info" v-on:click="Edit(data.item)" v-b-modal.modalTatib><i class="mdi mdi-pencil btn-icon-prepend"></i> Ubah</b-button>&nbsp;
                     <b-button size="sm" variant="danger" v-on:click="Drop(data.item.id)"><i class="mdi mdi-delete btn-icon-prepend"></i> Hapus</b-button>
                   </template>
                 </b-table>
@@ -45,47 +45,32 @@
     </div>
 
     <b-modal 
-      id="modalPelanggaran"
+      id="modalTatib"
       @ok="Save"
     >
       <template v-slot:modal-title>
-        Form Data Pelanggaran
+        Form Admin
       </template>
         <form ref="form">
+          <div class="form-group">
+            <label for="nama" class="col-form-label">Nama</label>
+            <input type="text" name="name" class="form-control" id="name" placeholder="Nama Petugas" v-model="name">
+          </div>
+          <div class="form-group">
+            <label for="nis" class="col-form-label">E-Mail</label>
+            <input type="text" name="email" class="form-control" id="email" placeholder="E-Mail" v-model="email">
+          </div>
+          <div class="form-group">
+            <label for="nama" class="col-form-label">Kata Sandi</label>
+            <input type="password" name="password" class="form-control" id="password" placeholder="Kata Sandi" v-model="password">
+          </div>
           <!-- <div class="form-group">
-            <label for="nama" class="col-form-label">Nis</label>
-            <input type="text" name="Nis" class="form-control" id="name" placeholder="Nis" v-model="nis">
-          </div>
-          <div class="form-group">
-            <label for="nis" class="col-form-label">Nama Siswa</label>
-            <input type="text" name="name" class="form-control" id="email" placeholder="Nama Siswa" v-model="nama_siswa">
-          </div>
-          <div class="form-group">
-            <label for="nama" class="col-form-label">Kelas</label>
-            <input type="text" name="Kelas" class="form-control" id="password" placeholder="Kelas" v-model="kelas">
+            <label for="role" class="col-form-label">Role</label>
+            <select class="form-control" name="role" id="role" v-model="role">
+              <option value="admin" checked>Admin</option>
+              <option value="petugas">Petugas</option>
+            </select>
           </div> -->
-          
-          <div class="form-group">
-            <label for="role" class="col-form-label"> Nama Pelanggaran</label>
-            <select class="form-control" name="nama_pelanggran" id="nama_pelanggaran" v-model="nama_pelanggaran">
-              <option value="Telat" checked>Telat</option>
-              <option value="Atribut tidak lengkap">Atribut tidak lengkap</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="role" class="col-form-label">Kategori</label>
-            <select class="form-control" name="nama_pelanggran" id="nama_pelanggaran" v-model="kategori">
-              <option value="Kedisiplinan" checked>Kedisiplinan</option>
-              <option value="Kerapian">Kerapian</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="role" class="col-form-label">poin</label>
-            <select class="form-control" name="poin" id="poin" v-model="poin">
-              <option value="30" checked>30</option>
-              <option value="40">40</option>
-            </select>
-          </div>
         </form>
     </b-modal>
 
@@ -98,17 +83,17 @@ module.exports = {
     return {
       search: "",
       id: "",
-      nama_pelanggaran: "",
-      kategori: "",
-      poin: "",
+      name: "",
+      email: "",
+      password: "",
       action: "",
       message: "",
       currentPage: 1,
       rows: 0,
       perPage: 10,
       key: "",
-      pelanggaran: [],
-      fields: [ "nama_pelanggaran", "kategori", "poin", "Aksi"],
+      user: [],
+      fields: ["id", "name", "email", "Aksi"],
     }
   },
 
@@ -117,15 +102,15 @@ module.exports = {
       let conf = { headers: { "Authorization" : 'Bearer ' + this.key } };
       let offset = (this.currentPage - 1) * this.perPage;
       this.$bvToast.show("loadingToast");
-      this.axios.get("/pelanggaran/" + this.perPage + "/" + offset, conf)
+      this.axios.get("/admin/" + this.perPage + "/" + offset, conf)
       .then(response => {
         if(response.data.status == 1){
           this.$bvToast.hide("loadingToast");
-          this.pelanggaran = response.data.pelanggaran;
+          this.user = response.data.user;
           this.rows = response.data.count;
         } else {
           this.$bvToast.hide("loadingToast");
-          this.message = "Gagal menampilkan data pelanggaran."
+          this.message = "Gagal menampilkan data Admin."
           this.$bvToast.show("message");
           this.$router.push({name: "login"})
         }
@@ -146,18 +131,17 @@ module.exports = {
 
     Add : function(){
       this.action = "insert";
-      this.id = "";
-      this.nama_pelanggaran = "";
-      this.kategori = "";
-      this.poin = ""; 
+      this.name = "";
+      this.email = "";
+      this.password = ""; 
+     
     },
 
     Edit : function(item){
       this.action = "update";
       this.id = item.id;
-      this.nama_pelanggaran = item.nama_pelanggaran;
-      this.kategori = item.kategori;
-      this.poin = item.poin;
+      this.name = item.name;
+      this.email = item.email;
     },
 
     Save : function(){
@@ -166,12 +150,12 @@ module.exports = {
       if(this.action === "insert"){
         let form = new FormData();
         form.append("id", this.id);
-        form.append("nama_pelanggaran",  this.nama_pelanggaran);
-        form.append("kategori", this.kategori);
-        form.append("poin", this.poin);
-       
+        form.append("name", this.name);
+        form.append("email", this.email);
+        form.append("password", this.password);
+        
 
-        this.axios.post("/pelanggaran", form, conf)
+        this.axios.post("/admin", form, conf)
         .then(response => {
           this.$bvToast.hide("loadingToast");
           if(this.search == ""){
@@ -187,12 +171,12 @@ module.exports = {
         });
       } else {
         let form = {
-          nama_pelanggaran: this.nama_pelanggaran,
-          kategori: this.kategori,
-          poin: this.poin,
-          
+          name: this.name,
+          email: this.email,
+          password: this.password,
+        
         }
-        this.axios.put("/pelanggaran/" + this.id, form, conf)
+        this.axios.put("/admin/" + this.id, form, conf)
         .then(response => {
           this.$bvToast.hide("loadingToast");
           if(this.search == ""){
@@ -213,7 +197,7 @@ module.exports = {
       let conf = { headers: { "Authorization" : "Bearer " + this.key} };
       if(confirm('Apakah anda yakin ingin menghapus data ini?')){
         this.$bvToast.show("loadingToast");
-        this.axios.delete("/pelanggaran/" + id, conf)
+        this.axios.delete("/admin/" + id, conf)
         .then(response => {
             this.getData();
             this.$bvToast.hide("loadingToast");

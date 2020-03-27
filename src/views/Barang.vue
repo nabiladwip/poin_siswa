@@ -5,17 +5,17 @@
         <div class="col-lg-12 grid-margin stretch-card">
           <div class="card">
             <div class="card-body">
-              <p class="card-title float-left"><b>Data Petugas Tatib</b></p>
+              <p class="card-title float-left"><b>Data Barang</b></p>
               <p class="card-description float-right">
-                <b-button variant="success" v-b-modal.modalTatib v-on:click="Add"><i class="mdi mdi-plus btn-icon-prepend"></i> Tambah</b-button>
+                <b-button variant="success" v-b-modal.modalBarang v-on:click="Add"><i class="mdi mdi-plus btn-icon-prepend"></i> Tambah</b-button>
               </p>
               <div class="table-responsive">
-                <b-table striped hover :items="user" :fields="fields">
+                <b-table striped hover :items="barang" :fields="fields">
                   <template v-slot:cell(role)="data">
                     <b-badge variant="warning">{{ data.item.role }}</b-badge>
                   </template>
                   <template v-slot:cell(Aksi)="data">
-                    <b-button size="sm" variant="info" v-on:click="Edit(data.item)" v-b-modal.modalTatib><i class="mdi mdi-pencil btn-icon-prepend"></i> Ubah</b-button>&nbsp;
+                    <b-button size="sm" variant="info" v-on:click="Edit(data.item)" v-b-modal.modalBarang><i class="mdi mdi-pencil btn-icon-prepend"></i> Ubah</b-button>&nbsp;
                     <b-button size="sm" variant="danger" v-on:click="Drop(data.item.id)"><i class="mdi mdi-delete btn-icon-prepend"></i> Hapus</b-button>
                   </template>
                 </b-table>
@@ -45,32 +45,30 @@
     </div>
 
     <b-modal 
-      id="modalTatib"
+      id="modalBarang"
       @ok="Save"
     >
       <template v-slot:modal-title>
-        Form Petugas
+        Form Data Barang
       </template>
         <form ref="form">
           <div class="form-group">
-            <label for="nama" class="col-form-label">Nama Petugas</label>
-            <input type="text" name="name" class="form-control" id="name" placeholder="Nama Petugas" v-model="name">
+            <label for="nama" class="col-form-label"> ID</label>
+            <input type="text" name="Nis" class="form-control" id="name" placeholder="ID" v-model="nis">
           </div>
           <div class="form-group">
-            <label for="nis" class="col-form-label">E-Mail</label>
-            <input type="text" name="email" class="form-control" id="email" placeholder="E-Mail" v-model="email">
+            <label for="nis" class="col-form-label">Nama Barang</label>
+            <input type="text" name="name" class="form-control" id="email" placeholder="Nama Barang" v-model="Nama">
           </div>
           <div class="form-group">
-            <label for="nama" class="col-form-label">Kata Sandi</label>
-            <input type="password" name="password" class="form-control" id="password" placeholder="Kata Sandi" v-model="password">
+            <label for="nama" class="col-form-label">Deskripsi</label>
+            <input type="text" name="Kelas" class="form-control" id="password" placeholder="Kelas" v-model="Deskripsi">
           </div>
-          <div class="form-group">
-            <label for="role" class="col-form-label">Role</label>
-            <select class="form-control" name="role" id="role" v-model="role">
-              <option value="admin" checked>Admin</option>
-              <option value="petugas">Petugas</option>
-            </select>
+           <div class="form-group">
+            <label for="nama" class="col-form-label">Harga</label>
+            <input type="text" name="Kelas" class="form-control" id="password" placeholder="Kelas" v-model="Harga">
           </div>
+          
         </form>
     </b-modal>
 
@@ -83,18 +81,17 @@ module.exports = {
     return {
       search: "",
       id: "",
-      name: "",
-      email: "",
-      password: "",
-      role: "",
+      nama_barang: "",
+      deskripsi: "",
+      harga: "",
       action: "",
       message: "",
       currentPage: 1,
       rows: 0,
       perPage: 10,
       key: "",
-      user: [],
-      fields: ["id", "name", "email", "role", "Aksi"],
+      barang: [],
+      fields: [  "nama_barang", "deskripsi","harga", "Aksi"],
     }
   },
 
@@ -103,15 +100,15 @@ module.exports = {
       let conf = { headers: { "Authorization" : 'Bearer ' + this.key } };
       let offset = (this.currentPage - 1) * this.perPage;
       this.$bvToast.show("loadingToast");
-      this.axios.get("/petugas/" + this.perPage + "/" + offset, conf)
+      this.axios.get("/barang/" + this.perPage + "/" + offset, conf)
       .then(response => {
         if(response.data.status == 1){
           this.$bvToast.hide("loadingToast");
-          this.user = response.data.user;
+          this.barang = response.data.barang;
           this.rows = response.data.count;
         } else {
           this.$bvToast.hide("loadingToast");
-          this.message = "Gagal menampilkan data petugas."
+          this.message = "Gagal menampilkan data Barang."
           this.$bvToast.show("message");
           this.$router.push({name: "login"})
         }
@@ -132,18 +129,18 @@ module.exports = {
 
     Add : function(){
       this.action = "insert";
-      this.name = "";
-      this.email = "";
-      this.password = ""; 
-      this.role = "";
+      this.id = "";
+      this.nama_barang = "";
+      this.deskripsi = "";
+      this.harga = ""; 
     },
 
     Edit : function(item){
       this.action = "update";
       this.id = item.id;
-      this.name = item.name;
-      this.email = item.email;
-      this.role = item.role;
+      this.nama_barang = item.nama_barang;
+      this.deskripsi = item.deskripsi;
+      this.harga = item.harga;
     },
 
     Save : function(){
@@ -152,12 +149,12 @@ module.exports = {
       if(this.action === "insert"){
         let form = new FormData();
         form.append("id", this.id);
-        form.append("name", this.name);
-        form.append("email", this.email);
-        form.append("password", this.password);
-        form.append("role", this.role);
+        form.append("nama_barang", this.nama_barang);
+        form.append("deskripsi", this.deskripsi);
+        form.append("harga", this.harga);
+       
 
-        this.axios.post("/petugas", form, conf)
+        this.axios.post("/barang", form, conf)
         .then(response => {
           this.$bvToast.hide("loadingToast");
           if(this.search == ""){
@@ -173,12 +170,12 @@ module.exports = {
         });
       } else {
         let form = {
-          name: this.name,
-          email: this.email,
-          password: this.password,
-          role: this.role
+          deskripsi: this.deskripsi,
+          nama_barang: this.nama_barang,
+          harga: this.harga,
+          
         }
-        this.axios.put("/petugas/" + this.id, form, conf)
+        this.axios.put("/barang/" + this.id, form, conf)
         .then(response => {
           this.$bvToast.hide("loadingToast");
           if(this.search == ""){
@@ -199,7 +196,7 @@ module.exports = {
       let conf = { headers: { "Authorization" : "Bearer " + this.key} };
       if(confirm('Apakah anda yakin ingin menghapus data ini?')){
         this.$bvToast.show("loadingToast");
-        this.axios.delete("/petugas/" + id, conf)
+        this.axios.delete("/barang/" + id, conf)
         .then(response => {
             this.getData();
             this.$bvToast.hide("loadingToast");

@@ -4,10 +4,10 @@
     :data-background-color="backgroundColor"
   >
     <div class="container">
-      <div class="copyright">
+      <!-- <div class="copyright">
         &copy; {{ year }}, Designed by
         SMK Telkom Malang
-      </div>
+      </div> -->
     </div>
   </footer>
 </template>

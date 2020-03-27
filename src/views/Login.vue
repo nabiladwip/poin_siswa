@@ -8,10 +8,9 @@
             <div class="col-lg-4 mx-auto">
               <div class="auth-form-light text-left p-5">
                 <div class="navbar-brand brand-logo">
-                  <img src="../assets/logo.svg">
+                  <img src="../assets/female.svg">
                 </div>
-                <h4>Selamat datang!</h4>
-                <h6 class="font-weight-light">Login untuk mengelola poin pelanggaran siswa.</h6>
+                <h4>WELCOME SySyyYYY</h4>
                 <form class="pt-3" v-on:submit.prevent="Login">
                 <div class="form-group">
                   <div class="input-group">

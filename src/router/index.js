@@ -3,12 +3,10 @@ import VueRouter from 'vue-router'
 import store from '../store'
 import Home from '../views/Home.vue'
 import Profile from '../views/Profile.vue'
-import DataSiswa from '../views/DataSiswa.vue'
 import Login from '../views/Login.vue'
-import Petugas from '../views/Petugas.vue'
-import Input from '../views/Input.vue'
-import Pelanggaran from '../views/Pelanggaran.vue'
-import Poin from '../views/Poin.vue'
+import Admin from '../views/Admin.vue'
+import Barang from '../views/Barang.vue'
+import Pelanggan from '../views/Pelanggan.vue'
 import Navbar from '../views/layouts/Navbar.vue'
 
 
@@ -32,9 +30,9 @@ const routes = [
     }
   },
   {
-    path: '/datasiswa',
-    name: 'datasiswa',
-    components: {default: DataSiswa, header: Navbar, footer: Footer},
+    path: '/barang',
+    name: 'barang',
+    components: {default: Barang, header: Navbar, footer: Footer},
     meta: { 
       requiresAuth: true
     }
@@ -48,37 +46,22 @@ const routes = [
     }
   },
   {
-    path: '/petugas',
-    name: 'petugas',
-    components: {default: Petugas, header: Navbar, footer: Footer},
+    path: '/pelanggan',
+    name: 'pelanggan',
+    components: {default: Pelanggan, header: Navbar, footer: Footer},
     meta: { 
       requiresAuth: true
     }
   },
   {
-    path: '/pelanggaran',
-    name: 'pelanggaran',
-    components: {default: Pelanggaran, header: Navbar, footer: Footer},
+    path: '/admin',
+    name: 'admin',
+    components: {default: Admin, header: Navbar, footer: Footer},
     meta: { 
       requiresAuth: true
     }
   },
-  {
-    path: '/input',
-    name: 'input',
-    components: {default: Input, header: Navbar, footer: Footer},
-    meta: { 
-      requiresAuth: true
-    }
-  },
-  {
-    path: '/poin',
-    name: 'poin',
-    components: {default: Poin, header: Navbar, footer: Footer},
-    meta: { 
-      requiresAuth: true
-    }
-  }
+  
 ]
 
 const router = new VueRouter({
